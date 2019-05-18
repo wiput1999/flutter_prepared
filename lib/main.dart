@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import './ui/registerPage.dart';
-import './ui/loginPage.dart';
-import './ui/homePage.dart';
-import './ui/profilePage.dart';
-import './ui/friendPage.dart';
+import 'package:flutter_prepared/ui/friend_page.dart';
+import 'package:flutter_prepared/ui/home_page.dart';
+import 'package:flutter_prepared/ui/login_page.dart';
+import 'package:flutter_prepared/ui/profile_page.dart';
+import 'package:flutter_prepared/ui/register_page.dart';
 
 void main() => runApp(MyApp());
 

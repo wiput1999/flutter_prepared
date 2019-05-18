@@ -6,7 +6,8 @@ class MyfriendPage extends StatelessWidget {
   final int id;
   final String name;
   // In the constructor, require a Todo
-  MyfriendPage({Key key, @required this.id, @required this.name}) : super(key: key);
+  MyfriendPage({Key key, @required this.id, @required this.name})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,32 +20,30 @@ class MyfriendPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 15, 30, 0),
           children: <Widget>[
-            Text(
-              "${id.toString()} : ${name}",
-              style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24)
-            ),
+            Text("${id.toString()} : $name",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
             RaisedButton(
               child: Text("TODOS"),
-              onPressed: (){
+              onPressed: () {
                 Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TodoPage(id: this.id),
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TodoPage(id: this.id),
+                  ),
+                );
               },
             ),
             RaisedButton(
               child: Text("POST"),
+              onPressed: () {},
             ),
             RaisedButton(
               child: Text("ALBUMS"),
+              onPressed: () {},
             ),
             RaisedButton(
               child: Text("BACK"),
-              onPressed: (){
+              onPressed: () {
                 Navigator.pop(context);
               },
             )

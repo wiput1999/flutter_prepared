@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prepared/db/userDB.dart';
+import 'package:flutter_prepared/db/user_db.dart';
+import 'package:flutter_prepared/utils/current_user.dart';
 import 'package:toast/toast.dart';
-import '../utils/currentUser.dart';
 
-
-class LoginPage extends StatefulWidget{
+class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return LoginPageState();
   }
-
 }
 
-class LoginPageState extends State<LoginPage>{
+class LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
   UserUtils user = UserUtils();
   final userid = TextEditingController();
@@ -37,32 +35,30 @@ class LoginPageState extends State<LoginPage>{
               height: 200,
             ),
             TextFormField(
-              decoration: InputDecoration(
-                labelText: "UserId",
-                icon: Icon(Icons.account_box, size: 40, color: Colors.grey),
-              ),
-              controller: userid,
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                if (value.isNotEmpty) {
-                  this.formState += 1;
-                }
-              }
-            ),
+                decoration: InputDecoration(
+                  labelText: "UserId",
+                  icon: Icon(Icons.account_box, size: 40, color: Colors.grey),
+                ),
+                controller: userid,
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value.isNotEmpty) {
+                    this.formState += 1;
+                  }
+                }),
             TextFormField(
-              decoration: InputDecoration(
-                labelText: "Password",
-                icon: Icon(Icons.lock, size: 40, color: Colors.grey),
-              ),
-              controller: password,
-              obscureText: true,
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                if (value.isNotEmpty) {
-                  this.formState += 1;
-                }
-              }
-            ),
+                decoration: InputDecoration(
+                  labelText: "Password",
+                  icon: Icon(Icons.lock, size: 40, color: Colors.grey),
+                ),
+                controller: password,
+                obscureText: true,
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value.isNotEmpty) {
+                    this.formState += 1;
+                  }
+                }),
             Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10)),
             RaisedButton(
               child: Text("Login"),
@@ -73,14 +69,15 @@ class LoginPageState extends State<LoginPage>{
 
                 Future isUserValid(String userid, String password) async {
                   var userList = await allUser;
-                  for(var i=0; i < userList.length;i++){
-                    if (userid == userList[i].userid && password == userList[i].password){
-                      CurrentUser.ID = userList[i].id;
-                      CurrentUser.USERID = userList[i].userid;
-                      CurrentUser.NAME = userList[i].name;
-                      CurrentUser.AGE = userList[i].age;
-                      CurrentUser.PASSWORD = userList[i].password;
-                      CurrentUser.QUOTE = userList[i].quote;
+                  for (var i = 0; i < userList.length; i++) {
+                    if (userid == userList[i].userid &&
+                        password == userList[i].password) {
+                      CurrentUser.id = userList[i].id;
+                      CurrentUser.userId = userList[i].userid;
+                      CurrentUser.name = userList[i].name;
+                      CurrentUser.age = userList[i].age;
+                      CurrentUser.password = userList[i].password;
+                      CurrentUser.quote = userList[i].quote;
                       this.isValid = true;
                       print("this user valid");
                       break;
@@ -88,8 +85,9 @@ class LoginPageState extends State<LoginPage>{
                   }
                 }
 
-                if(this.formState != 2){
-                  Toast.show("Please fill out this form", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                if (this.formState != 2) {
+                  Toast.show("Please fill out this form", context,
+                      duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
                   this.formState = 0;
                   print(111);
                 } else {
@@ -97,9 +95,10 @@ class LoginPageState extends State<LoginPage>{
                   this.formState = 0;
                   print("${userid.text}, ${password.text}");
                   await isUserValid(userid.text, password.text);
-                  if( !this.isValid){
+                  if (!this.isValid) {
                     print(333);
-                    Toast.show("Invalid user or password", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                    Toast.show("Invalid user or password", context,
+                        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
                   } else {
                     print(444);
                     Navigator.pushReplacementNamed(context, '/home');
@@ -110,10 +109,10 @@ class LoginPageState extends State<LoginPage>{
 
                 Future showAllUser() async {
                   var userList = await allUser;
-                  for(var i=0; i < userList.length;i++){
+                  for (var i = 0; i < userList.length; i++) {
                     print(userList[i]);
-                    }
                   }
+                }
 
                 showAllUser();
                 print(CurrentUser.whoCurrent());

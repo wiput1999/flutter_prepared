@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import '../utils/currentUser.dart';
+import 'package:flutter_prepared/utils/current_user.dart';
 
-
-class HomePage extends StatefulWidget{
+class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return HomePageState();
   }
-
 }
 
-class HomePageState extends State<HomePage>{
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +20,8 @@ class HomePageState extends State<HomePage>{
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
           children: <Widget>[
             ListTile(
-              title: Text('Hello ${CurrentUser.NAME}'),
-              subtitle: Text('this is my quote "${CurrentUser.QUOTE}"'),
+              title: Text('Hello ${CurrentUser.name}'),
+              subtitle: Text('this is my quote "${CurrentUser.quote}"'),
             ),
             RaisedButton(
               child: Text("PROFILE SETUP"),
@@ -40,11 +38,11 @@ class HomePageState extends State<HomePage>{
             RaisedButton(
               child: Text("SIGN OUT"),
               onPressed: () {
-                CurrentUser.USERID = null;
-                CurrentUser.NAME = null;
-                CurrentUser.AGE = null;
-                CurrentUser.PASSWORD = null;
-                CurrentUser.QUOTE = null;
+                CurrentUser.userId = null;
+                CurrentUser.name = null;
+                CurrentUser.age = null;
+                CurrentUser.password = null;
+                CurrentUser.quote = null;
                 Navigator.of(context).pushReplacementNamed('/');
               },
             ),
@@ -53,5 +51,4 @@ class HomePageState extends State<HomePage>{
       ),
     );
   }
-
 }

@@ -36,14 +36,15 @@ class User {
       quoteColumn: quote,
     };
     if (id != null) {
-      map[idColumn] = id; 
+      map[idColumn] = id;
     }
     return map;
   }
 
   @override
-  String toString() { return 'id: ${this.id}, userid:  ${this.userid}, name:  ${this.name}, age:  ${this.age}, password:  ${this.password}, quote:  ${this.quote}'; }
-
+  String toString() {
+    return 'id: ${this.id}, userid:  ${this.userid}, name:  ${this.name}, age:  ${this.age}, password:  ${this.password}, quote:  ${this.quote}';
+  }
 }
 
 class UserUtils {
@@ -72,10 +73,18 @@ class UserUtils {
 
   Future<User> getUser(int id) async {
     List<Map<String, dynamic>> maps = await db.query(userTable,
-        columns: [idColumn, useridColumn, nameColumn, ageColumn, passwordColumn, quoteColumn],
+        columns: [
+          idColumn,
+          useridColumn,
+          nameColumn,
+          ageColumn,
+          passwordColumn,
+          quoteColumn
+        ],
         where: '$idColumn = ?',
         whereArgs: [id]);
-        maps.length > 0 ? new User.formMap(maps.first) : null;
+
+    return maps.length > 0 ? new User.formMap(maps.first) : null;
   }
 
   Future<int> deleteUser(int id) async {
@@ -86,14 +95,21 @@ class UserUtils {
     return db.update(userTable, user.toMap(),
         where: '$idColumn = ?', whereArgs: [user.id]);
   }
-  
+
   Future<List<User>> getAllUser() async {
     await this.open("user.db");
-    var res = await db.query(userTable, columns: [idColumn, useridColumn, nameColumn, ageColumn, passwordColumn, quoteColumn]);
-    List<User> userList = res.isNotEmpty ? res.map((c) => User.formMap(c)).toList() : [];
+    var res = await db.query(userTable, columns: [
+      idColumn,
+      useridColumn,
+      nameColumn,
+      ageColumn,
+      passwordColumn,
+      quoteColumn
+    ]);
+    List<User> userList =
+        res.isNotEmpty ? res.map((c) => User.formMap(c)).toList() : [];
     return userList;
   }
 
   Future close() async => db.close();
-
 }
