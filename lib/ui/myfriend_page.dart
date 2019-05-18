@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_prepared/ui/album_page.dart';
+import 'package:flutter_prepared/ui/post_page.dart';
 import './todo_page.dart';
 
 class MyfriendPage extends StatelessWidget {
@@ -35,11 +37,25 @@ class MyfriendPage extends StatelessWidget {
             ),
             RaisedButton(
               child: Text("POST"),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostPage(id: this.id),
+                  ),
+                );
+              },
             ),
             RaisedButton(
               child: Text("ALBUMS"),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AlbumPage(id: this.id),
+                  ),
+                );
+              },
             ),
             RaisedButton(
               child: Text("BACK"),

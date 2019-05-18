@@ -14,7 +14,6 @@ Future<List<Todo>> fetchTodos(int userid) async {
     var body = json.decode(response.body);
     for (int i = 0; i < body.length; i++) {
       var todo = Todo.fromJson(body[i]);
-      print(todo);
       if (todo.userid == userid) {
         todoApi.add(todo);
       }
@@ -39,7 +38,7 @@ class Todo {
       userid: json['userId'],
       id: json['id'],
       title: json['title'],
-      completed: (json['completed'] ? "complete" : ""),
+      completed: (json['completed'] ? "Completed" : ""),
     );
   }
 }
