@@ -29,8 +29,8 @@ class LoginPageState extends State<LoginPage> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 15, 30, 0),
           children: <Widget>[
-            Image.asset(
-              "assets/banner.jpg",
+            Image.network(
+              "http://www.nationmultimedia.com/img/news/2014/07/27/30239586/30239586-01.jpg",
               width: 200,
               height: 200,
             ),
