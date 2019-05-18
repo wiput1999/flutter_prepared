@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './todoPage.dart';
+import './todo_page.dart';
 
 class MyfriendPage extends StatelessWidget {
   // Declare a field that holds the Todo
