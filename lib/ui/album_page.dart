@@ -15,7 +15,6 @@ Future<List<Album>> fetchPosts(int userid) async {
     var body = json.decode(response.body);
     for (int i = 0; i < body.length; i++) {
       var album = Album.fromJson(body[i]);
-      print(album);
       if (album.userid == userid) {
         albumApi.add(album);
       }

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:async';
 
 Future<List<Comment>> fetchPosts(int postId) async {
-  print(postId);
   final response = await http
       .get('https://jsonplaceholder.typicode.com/posts/$postId/comments');
 
@@ -15,7 +14,6 @@ Future<List<Comment>> fetchPosts(int postId) async {
     var body = json.decode(response.body);
     for (int i = 0; i < body.length; i++) {
       var comment = Comment.fromJson(body[i]);
-      print(comment);
       if (comment.postid == postId) {
         commentApi.add(comment);
       }

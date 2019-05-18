@@ -14,7 +14,6 @@ Future<List<Photo>> fetchPosts(int albumId) async {
     var body = json.decode(response.body);
     for (int i = 0; i < body.length; i++) {
       var photo = Photo.fromJson(body[i]);
-      print(photo);
       if (photo.albumId == albumId) {
         commentApi.add(photo);
       }
