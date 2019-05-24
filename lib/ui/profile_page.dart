@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_prepared/db/user_db.dart';
 import 'package:flutter_prepared/utils/current_user.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -20,6 +23,22 @@ class ProfilePageState extends State<ProfilePage> {
   final quote = TextEditingController(text: CurrentUser.quote);
 
   bool isUserIn = false;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/data.txt');
+  }
+
+  Future<File> writeContent(String data) async {
+    final file = await _localFile;
+    file.writeAsString('$data');
+    return file;
+  }
 
   bool isNumeric(String s) {
     if (s == null) {
@@ -145,7 +164,6 @@ class ProfilePageState extends State<ProfilePage> {
                         for (var i = 0; i < userList.length; i++) {
                           if (user.userid == userList[i].userid &&
                               CurrentUser.id != userList[i].id) {
-                            print('Taken');
                             this.isUserIn = true;
                             break;
                           }
@@ -155,9 +173,9 @@ class ProfilePageState extends State<ProfilePage> {
                       //validate form
                       if (_formkey.currentState.validate()) {
                         await isUserTaken(userData);
-                        print(this.isUserIn);
                         //if user not exist
                         if (!this.isUserIn) {
+                          writeContent(userData.quote);
                           await user.updateUser(userData);
                           CurrentUser.userId = userData.userid;
                           CurrentUser.name = userData.name;
@@ -165,20 +183,9 @@ class ProfilePageState extends State<ProfilePage> {
                           CurrentUser.password = userData.password;
                           CurrentUser.quote = userData.quote;
                           Navigator.pop(context);
-                          print('insert complete');
                         }
                       }
-
                       this.isUserIn = false;
-                      Future showAllUser() async {
-                        var userList = await allUser;
-                        for (var i = 0; i < userList.length; i++) {
-                          print(userList[i]);
-                        }
-                      }
-
-                      showAllUser();
-                      print(CurrentUser.whoCurrent());
                     }),
               ]),
         ));

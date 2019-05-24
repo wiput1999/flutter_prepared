@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_prepared/utils/current_user.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+SharedPreferences sharedPreferences;
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,6 +15,37 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  String _data = '';
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    // For your reference print the AppDoc directory
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/data.txt');
+  }
+
+  Future<String> readContent() async {
+    try {
+      final file = await _localFile;
+      // Read the file
+      String contents = await file.readAsString();
+      this._data = contents;
+      return this._data;
+    } catch (e) {
+      // If there is an error reading, return a default String
+      return 'Error';
+    }
+  }
+
+  @override
+  void setState(fn) {
+    super.setState(fn);
+    readContent();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +58,8 @@ class HomePageState extends State<HomePage> {
           children: <Widget>[
             ListTile(
               title: Text('Hello ${CurrentUser.name}'),
-              subtitle: Text('this is my quote "${CurrentUser.quote}"'),
+              subtitle: Text(
+                  'this is my quote "${CurrentUser.quote != null ? CurrentUser.quote == '' ? 'ยังไม่มีการระบุข้อมูล' : _data == '' ? CurrentUser.quote : _data : 'ยังไม่มีการระบุข้อมูล'}"'),
             ),
             RaisedButton(
               child: Text("PROFILE SETUP"),
@@ -38,6 +76,14 @@ class HomePageState extends State<HomePage> {
             RaisedButton(
               child: Text("SIGN OUT"),
               onPressed: () {
+                clearSharedPreferences() async {
+                  sharedPreferences = await SharedPreferences.getInstance();
+                  sharedPreferences.setString('username', '');
+                  sharedPreferences.setString('password', '');
+                }
+
+                clearSharedPreferences();
+
                 CurrentUser.userId = null;
                 CurrentUser.name = null;
                 CurrentUser.age = null;

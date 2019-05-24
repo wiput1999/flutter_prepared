@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_prepared/db/user_db.dart';
 import 'package:flutter_prepared/utils/current_user.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+
+SharedPreferences sharedPreferences;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -19,7 +25,74 @@ class LoginPageState extends State<LoginPage> {
   int formState = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    // For your reference print the AppDoc directory
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/data.txt');
+  }
+
+  Future<String> readContent() async {
+    try {
+      final file = await _localFile;
+      // Read the file
+      String contents = await file.readAsString();
+      return contents;
+    } catch (e) {
+      // If there is an error reading, return a default String
+      return 'Error';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    setState(() {
+      checkLogin(String userchk, String passwordchk) async {
+        await user.open("user.db");
+        Future<List<User>> allUser = user.getAllUser();
+        Future isUserValid(String userid, String password) async {
+          var userList = await allUser;
+          for (var i = 0; i < userList.length; i++) {
+            if (userid == userList[i].userid &&
+                password == userList[i].password) {
+              CurrentUser.id = userList[i].id;
+              CurrentUser.userId = userList[i].userid;
+              CurrentUser.name = userList[i].name;
+              CurrentUser.age = userList[i].age;
+              CurrentUser.password = userList[i].password;
+              CurrentUser.quote = await readContent();
+              this.isValid = true;
+              sharedPreferences = await SharedPreferences.getInstance();
+              sharedPreferences.setString("username", userList[i].userid);
+              sharedPreferences.setString("password", userList[i].password);
+              return Navigator.pushReplacementNamed(context, '/home');
+            }
+          }
+        }
+
+        isUserValid(userchk, passwordchk);
+      }
+
+      getCredential() async {
+        sharedPreferences = await SharedPreferences.getInstance();
+        String username = sharedPreferences.getString('username');
+        String password = sharedPreferences.getString('password');
+        if (username != "" && username != null) {
+          checkLogin(username, password);
+        }
+      }
+
+      getCredential();
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
@@ -77,9 +150,13 @@ class LoginPageState extends State<LoginPage> {
                       CurrentUser.name = userList[i].name;
                       CurrentUser.age = userList[i].age;
                       CurrentUser.password = userList[i].password;
-                      CurrentUser.quote = userList[i].quote;
+                      CurrentUser.quote = await readContent();
                       this.isValid = true;
-                      print("this user valid");
+                      sharedPreferences = await SharedPreferences.getInstance();
+                      sharedPreferences.setString(
+                          "username", userList[i].userid);
+                      sharedPreferences.setString(
+                          "password", userList[i].password);
                       break;
                     }
                   }
@@ -89,38 +166,23 @@ class LoginPageState extends State<LoginPage> {
                   Toast.show("Please fill out this form", context,
                       duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
                   this.formState = 0;
-                  print(111);
                 } else {
-                  print(222);
                   this.formState = 0;
-                  print("${userid.text}, ${password.text}");
                   await isUserValid(userid.text, password.text);
                   if (!this.isValid) {
-                    print(333);
                     Toast.show("Invalid user or password", context,
                         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
                   } else {
-                    print(444);
                     Navigator.pushReplacementNamed(context, '/home');
                     userid.text = "";
                     password.text = "";
                   }
                 }
-
-                Future showAllUser() async {
-                  var userList = await allUser;
-                  for (var i = 0; i < userList.length; i++) {
-                    print(userList[i]);
-                  }
-                }
-
-                showAllUser();
-                print(CurrentUser.whoCurrent());
               },
             ),
             FlatButton(
               child: Container(
-                child: Text("register new user", textAlign: TextAlign.right),
+                child: Text("Register New User", textAlign: TextAlign.right),
               ),
               onPressed: () {
                 Navigator.of(context).pushNamed('/register');
